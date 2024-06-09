@@ -115,10 +115,8 @@ function initDropdowns() {
 }
 
 function beginFilter() {
-    console.log('beginFilter');
     const filterQuery = generateFilterQuery();
     dataTransaction.filtered = alasql(('SELECT * FROM ? ' + filterQuery), [dataTransaction.raw]);
-    dataLocationTransaction.filtered = alasql(('SELECT * FROM ? ' + filterQuery), [dataLocationTransaction.raw]);
     visualize();
 }
 
