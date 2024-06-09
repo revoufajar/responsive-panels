@@ -3,62 +3,159 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<title>CONTOH RESPONSIVE</title>
+	<title>New York Property Sales</title>
+	<link href="https://fonts.cdnfonts.com/css/open-sauce-one" rel="stylesheet">
 	<link rel="stylesheet" href="./style.css">
+	<script src="https://cdn.jsdelivr.net/npm/alasql@4.3.3/dist/alasql.min.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/chartjs-chart-treemap@2.3.1/dist/chartjs-chart-treemap.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/numbro@2.5.0/dist/numbro.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0/dist/chartjs-plugin-datalabels.js"></script>
+
 	<script src="./script.js"></script>
 </head>
-<body>
+<body class="page-container">
+	<div id="loading" class="loading-container d-flex justify-content-center align-items-center">
+		<div class="loader"></div>
+	</div>
+	<div class="row align-items-center">
+		<div class="col-6">
+			<h1>NYC Property Sales</h1>
+		</div>
+		<div class="col-6">
+			<div class="d-flex justify-content-end align-items-center">
+				<div>
+					<div id="list-date" class="dropdown-check-list">
+					  <span class="anchor">Date</span>
+					  <ul id="list-date-items" class="items"></ul>
+					</div>
+				</div>
+				<div class="filter-block">
+					<div id="list-borough" class="dropdown-check-list">
+					  <span class="anchor">Borough</span>
+					  <ul id="list-borough-items" class="items"></ul>
+					</div>
+				</div>
+				<div class="filter-block">
+					<button type="button" class="btn btn-rounded btn-success" onclick="beginFilter()">
+						Filter
+					</button>
+				</div>
+			</div>
+		</div>
+	</div>
 	<div class="row">
 		<div class="col-3">
 			<div class="chart">
-				<p>EMPAT BARIS</p>
+				<h1 id="totalSalesPrice">...</h1>
+				<h6>Total Sales Price</h6>
 			</div>
 		</div>
 		<div class="col-3">
 			<div class="chart">
-				<p>EMPAT BARIS</p>
+				<h1 id="totalUnits">...</h1>
+				<h6>Total Units</h6>
 			</div>
 		</div>
 		<div class="col-3">
 			<div class="chart">
-				<p>EMPAT BARIS</p>
+				<h1 id="totalBuildings">...</h1>
+				<h6>Total Buildings</h6>
 			</div>
 		</div>
 		<div class="col-3">
 			<div class="chart">
-				<p>EMPAT BARIS</p>
+				<h1 id="totalLandSquareUnits">...</h1>
+				<h6>Total Land Square Units (m<sup>2</sup>)</h6>
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-8">
+			<div class="chart">
+				<h5>Sales Trend by Borough</h5>
+				<canvas id="chartSalesTrendByBorough"></canvas>
+			</div>
+		</div>
+		<div class="col-4">
+			<div class="chart">
+				<h5>Table Data</h5>
+				<table class="table chart m-0">
+					<thead>
+						<tr>
+							<th class="text-center">No</th>
+							<th class="text-center">Borough</th>
+							<th class="text-end">Total Sales</th>
+						</tr>
+					</thead>
+					<tbody id="table-of-sales-trend-by-borough"></tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-12">
+			<div class="chart">
+				<h5>Sales Trend</h5>
+				<canvas id="chartSalesTrend"></canvas>
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-12">
+			<div class="chart">
+				<h5>Unit Trend by Residential Type</h5>
+				<canvas id="chartUnitTrendByResidentialType"></canvas>
 			</div>
 		</div>
 	</div>
 	<div class="row">
 		<div class="col-6">
 			<div class="chart">
-				<p>LINE CHART</p>
-				<canvas id="lineChart"></canvas>
+				<h5>Total Land Square By Borough</h5>
+				<canvas id="chartLandSquareByBorough"></canvas>
 			</div>
 		</div>
 		<div class="col-6">
 			<div class="chart">
-				<p>BAR CHART</p>
-				<canvas id="barChart"></canvas>
+				<h5>Total Unit By Borough</h5>
+				<canvas id="chartTotalUnitByBorough"></canvas>
 			</div>
 		</div>
 	</div>
 	<div class="row">
-		<div class="col-4">
+		<div class="col-12">
 			<div class="chart">
-				<p>TIGA BARIS</p>
-			</div>
-		</div>
-		<div class="col-4">
-			<div class="chart">
-				<p>TIGA BARIS</p>
-			</div>
-		</div>
-		<div class="col-4">
-			<div class="chart">
-				<p>TIGA BARIS</p>
+				<h5>Data View</h5>
+				<table class="table">
+					<thead>
+						<tr>
+							<th class="text-center">No</th>
+							<th>Date</th>
+							<th>Borough</th>
+							<th>Classification</th>
+							<th>Residential</th>
+							<th>Unit</th>
+							<th class="text-end">Sales</th>
+							<th class="text-end">LOT</th>
+							<th class="text-end">Land Size</th>
+						</tr>
+					</thead>
+					<tbody id="data-table"></tbody>
+				</table>
+				<div class="d-flex justify-content-between align-items-center gap-3">
+					<div>
+						<span id="table-data-status"></span>
+					</div>
+					<div>
+						<button id="table-data-btn-prev" type="button" class="btn btn-secondary" onclick="tablePrevPage()">
+							<span>Prev</span>
+						</button>
+						<button id="table-data-btn-next" type="button" class="btn btn-secondary" onclick="tableNextPage()">
+							<span>Next</span>
+						</button>
+					</div>
+				</div>
 			</div>
 		</div>
 	</div>
